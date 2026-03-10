@@ -3,28 +3,35 @@ import {
   Tooltip, ResponsiveContainer, Cell, ReferenceLine
 } from 'recharts'
 
-// Cluster tag colors
-const CLUSTER_COLORS = {
-  'High-Risk Bleeders':       { bg: 'var(--red-dim)',   border: 'var(--red)',   text: 'var(--red)'   },
-  'High-Efficiency Scalers':  { bg: 'var(--green-dim)', border: 'var(--green)', text: 'var(--green)' },
-  'Tenured Stable':           { bg: 'var(--blue-dim)',  border: 'var(--blue)',  text: 'var(--blue)'  },
-  'Volatile Newcomers':       { bg: 'var(--amber-dim)', border: 'var(--amber)', text: 'var(--amber)' },
+// Cluster visual config
+const CLUSTER_STYLES = {
+  'High-Risk Bleeders':      { bg: 'var(--red-dim)',    border: 'var(--red)',    text: 'var(--red)',    barColor: '#ef4444' },
+  'High-Efficiency Scalers': { bg: 'var(--green-dim)',  border: 'var(--green)',  text: 'var(--green)',  barColor: '#22c55e' },
+  'Tenured Stable':          { bg: 'var(--blue-dim)',   border: 'var(--blue)',   text: 'var(--blue)',   barColor: '#3b82f6' },
+  'Volatile Newcomers':      { bg: 'var(--gold-dim)',   border: 'var(--gold)',   text: 'var(--gold)',   barColor: '#f59e0b' },
 }
 
-function getClusterType(name) {
-  for (const key of Object.keys(CLUSTER_COLORS)) {
-    if (name.includes(key)) return key
+function getClusterStyle(name) {
+  for (const key of Object.keys(CLUSTER_STYLES)) {
+    if (name.includes(key)) return CLUSTER_STYLES[key]
   }
-  return 'Volatile Newcomers'
+  return CLUSTER_STYLES['Volatile Newcomers']
+}
+
+function IconInsight({ color = 'var(--blue)' }) {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color, flexShrink: 0, marginTop: 1 }}>
+      <path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/>
+    </svg>
+  )
 }
 
 export default function Slide3Patterns({ data }) {
-  const lifecycle = data.lifecycle
+  const lifecycle  = data.lifecycle
   const efficiency = data.efficiency
-  const bleed = data.bleed_analysis
-  const clusters = data.clusters
+  const bleed      = data.bleed_analysis
+  const clusters   = data.clusters
 
-  // Age-cohort churn rate bars (exclude 5+ years — no accounts)
   const cohortChurnData = Object.entries(lifecycle)
     .filter(([, v]) => v.total > 0)
     .map(([cohort, v]) => ({
@@ -34,7 +41,6 @@ export default function Slide3Patterns({ data }) {
       churned: v.churned,
     }))
 
-  // Efficiency bars (exclude 5+ years)
   const efficiencyData = Object.entries(efficiency)
     .filter(([, v]) => v !== null)
     .map(([cohort, v]) => ({
@@ -42,12 +48,11 @@ export default function Slide3Patterns({ data }) {
       ratio: v,
     }))
 
-  // Cluster cards
-  const clusterEntries = Object.entries(clusters).map(([name, vals]) => {
-    const type = getClusterType(name)
-    const shortName = type
-    return { name, shortName, vals, type, colors: CLUSTER_COLORS[type] }
-  })
+  const clusterEntries = Object.entries(clusters).map(([name, vals]) => ({
+    name,
+    vals,
+    style: getClusterStyle(name),
+  }))
 
   const avgChurn = (cohortChurnData.reduce((s, d) => s + d.churn_rate, 0) / cohortChurnData.length).toFixed(1)
 
@@ -55,7 +60,7 @@ export default function Slide3Patterns({ data }) {
     <div className="slide">
       <div className="slide-header">
         <div>
-          <div className="slide-tag">Slide 3 · Hidden Patterns</div>
+          <div className="slide-tag">03 · Hidden Patterns</div>
           <h1 className="slide-title">What does the data tell us beneath the surface?</h1>
           <p className="slide-subtitle">Lifecycle analysis · Efficiency cohorts · Behavioral clustering</p>
         </div>
@@ -67,12 +72,12 @@ export default function Slide3Patterns({ data }) {
         {/* Top-left: Age cohort churn rate */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="card-label">Churn Rate by Account Age</div>
-          <div style={{
-            fontSize: 12, color: 'var(--muted)', marginBottom: 8,
-            background: 'var(--blue-dim)', borderRadius: 8, padding: '5px 10px'
-          }}>
-            💡 Churn is uniform across all lifecycle stages (~{avgChurn}%).
-            No single age group is a retention priority — it's a cross-portfolio problem.
+          <div className="insight insight-blue">
+            <IconInsight color="var(--blue)" />
+            <span>
+              Churn is uniform across all lifecycle stages (~<strong>{avgChurn}%</strong>).
+              No single age group is a priority — it's a cross-portfolio problem.
+            </span>
           </div>
           <div style={{ flex: 1, minHeight: 0 }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -82,31 +87,30 @@ export default function Slide3Patterns({ data }) {
                 <YAxis
                   tickFormatter={v => `${v}%`}
                   tick={{ fill: 'var(--muted)', fontSize: 10 }}
-                  axisLine={false} tickLine={false} width={34}
-                  domain={[0, 30]}
+                  axisLine={false} tickLine={false} width={34} domain={[0, 30]}
                 />
                 <Tooltip
                   formatter={(v, n, p) => [`${v}% (${p.payload.churned}/${p.payload.total})`, 'Churn Rate']}
-                  contentStyle={{ background: 'var(--card-alt)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
+                  contentStyle={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
                   labelFormatter={l => `Cohort: ${l}`}
                 />
-                <ReferenceLine y={Number(avgChurn)} stroke="var(--amber)" strokeDasharray="4 4"
-                  label={{ value: `avg ${avgChurn}%`, fill: 'var(--amber)', fontSize: 10, position: 'right' }} />
+                <ReferenceLine y={Number(avgChurn)} stroke="var(--gold)" strokeDasharray="4 4"
+                  label={{ value: `avg ${avgChurn}%`, fill: 'var(--gold)', fontSize: 10, position: 'right' }} />
                 <Bar dataKey="churn_rate" radius={[4, 4, 0, 0]} fill="var(--blue)" fillOpacity={0.8} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Top-right: Efficiency by cohort */}
+        {/* Top-right: Efficiency */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="card-label">TPV/MRR Efficiency by Account Age</div>
-          <div style={{
-            fontSize: 12, color: 'var(--muted)', marginBottom: 8,
-            background: 'var(--green-dim)', borderRadius: 8, padding: '5px 10px'
-          }}>
-            💡 Accounts aged 2–5 years are <strong style={{ color: 'var(--green)' }}>25x more efficient</strong> than younger cohorts.
-            Established customers process far more payroll per $ of MRR — highest LTV segment.
+          <div className="insight insight-green">
+            <IconInsight color="var(--green)" />
+            <span>
+              Accounts aged 2–5 years are <strong style={{ color: 'var(--green)' }}>25× more efficient</strong> than younger cohorts.
+              Highest LTV segment — protect at all costs.
+            </span>
           </div>
           <div style={{ flex: 1, minHeight: 0 }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -120,16 +124,12 @@ export default function Slide3Patterns({ data }) {
                 />
                 <Tooltip
                   formatter={v => [`${v}x`, 'TPV/MRR']}
-                  contentStyle={{ background: 'var(--card-alt)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
+                  contentStyle={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
                   labelFormatter={l => `Cohort: ${l}`}
                 />
                 <Bar dataKey="ratio" radius={[4, 4, 0, 0]}>
                   {efficiencyData.map((entry, i) => (
-                    <Cell
-                      key={i}
-                      fill={entry.ratio > 20 ? 'var(--green)' : 'var(--blue)'}
-                      fillOpacity={entry.ratio > 20 ? 1 : 0.6}
-                    />
+                    <Cell key={i} fill={entry.ratio > 20 ? 'var(--green)' : 'var(--blue)'} fillOpacity={entry.ratio > 20 ? 1 : 0.6} />
                   ))}
                 </Bar>
               </BarChart>
@@ -137,42 +137,52 @@ export default function Slide3Patterns({ data }) {
           </div>
         </div>
 
-        {/* Bottom: Behavioral clusters (4 cards) */}
+        {/* Bottom: Cluster cards */}
         <div className="card" style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
             <div className="card-label">Behavioral Clusters — 4 Customer Profiles (K-Means)</div>
-            <div style={{ fontSize: 11, color: 'var(--muted)' }}>
-              Clustered on: TPV stability · MRR efficiency · Account age
+            <div style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'var(--font-mono)' }}>
+              TPV stability · MRR efficiency · Account age
             </div>
           </div>
+
           <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
-            {clusterEntries.map(({ shortName, vals, colors }) => (
-              <div key={shortName} style={{
-                background: colors.bg,
-                border: `1px solid ${colors.border}`,
-                borderRadius: 10,
-                padding: '12px 14px',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 6,
-              }}>
-                <div style={{ fontWeight: 700, fontSize: 12, color: colors.text }}>{shortName}</div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 8px', fontSize: 11 }}>
-                  <span style={{ color: 'var(--muted)' }}>Accounts</span>
-                  <span style={{ fontWeight: 600 }}>{Math.round(vals.count)}</span>
-                  <span style={{ color: 'var(--muted)' }}>Avg age</span>
-                  <span style={{ fontWeight: 600 }}>{vals.avg_age_months.toFixed(0)} mo</span>
-                  <span style={{ color: 'var(--muted)' }}>Efficiency</span>
-                  <span style={{ fontWeight: 600 }}>{vals.avg_efficiency.toFixed(1)}x</span>
-                  <span style={{ color: 'var(--muted)' }}>Churn rate</span>
-                  <span style={{ fontWeight: 600, color: vals.churn_rate > 0.5 ? 'var(--red)' : vals.churn_rate < 0.05 ? 'var(--green)' : 'var(--amber)' }}>
-                    {(vals.churn_rate * 100).toFixed(0)}%
-                  </span>
+            {clusterEntries.map(({ name, vals, style }) => {
+              const churnPct = (vals.churn_rate * 100).toFixed(0)
+              const churnColor = vals.churn_rate > 0.5
+                ? 'var(--red)'
+                : vals.churn_rate < 0.05
+                  ? 'var(--green)'
+                  : 'var(--gold)'
+
+              return (
+                <div
+                  key={name}
+                  className="cluster-card"
+                  style={{ background: style.bg, borderColor: style.border }}
+                >
+                  <div className="cluster-card-name" style={{ color: style.text }}>{name}</div>
+                  <div className="cluster-stats">
+                    <span className="stat-label">Accounts</span>
+                    <span className="stat-value">{Math.round(vals.count)}</span>
+                    <span className="stat-label">Avg age</span>
+                    <span className="stat-value">{vals.avg_age_months.toFixed(0)} mo</span>
+                    <span className="stat-label">Efficiency</span>
+                    <span className="stat-value">{vals.avg_efficiency.toFixed(1)}x</span>
+                    <span className="stat-label">Churn rate</span>
+                    <span className="stat-value" style={{ color: churnColor }}>{churnPct}%</span>
+                  </div>
+                  <div className="churn-bar-track">
+                    <div
+                      className="churn-bar-fill"
+                      style={{ width: `${Math.min(Number(churnPct), 100)}%`, background: style.barColor }}
+                    />
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
-          {/* Bleed finding */}
+
           <div style={{ marginTop: 10, fontSize: 12, color: 'var(--muted)', borderTop: '1px solid var(--border)', paddingTop: 8 }}>
             <strong style={{ color: 'var(--green)' }}>Active portfolio health: </strong>
             {bleed.interpretation}
