@@ -1,0 +1,238 @@
+{
+    "metadata": {
+        "analysis_period": "Jan 2024 \u2013 Dec 2024 (downloaded Feb 2025)",
+        "total_accounts": 1500,
+        "generated_at": "2026-03-10T10:43:03",
+        "version": "v2"
+    },
+    "revenue_health": {
+        "starting_mrr": 4476064.0,
+        "expansion_mrr": 98189.0,
+        "contraction_mrr": 120373.15,
+        "churn_mrr": 898744.85,
+        "ending_mrr": 3555135.0,
+        "nrr": 79.43,
+        "_reconciliation_check": -0.0
+    },
+    "churn_metrics": {
+        "total_accounts": 1500,
+        "formal_churn_count": 328,
+        "behavioral_churn_count": 0,
+        "effective_churn_count": 328,
+        "formal_churn_rate_pct": 21.87,
+        "behavioral_churn_rate_pct": 0.0,
+        "effective_churn_rate_pct": 21.87
+    },
+    "churn_spike": {
+        "Month 1 (Jan 2024)": 22,
+        "Month 2 (Feb 2024)": 17,
+        "Month 3 (Mar 2024)": 12,
+        "Month 4 (Apr 2024)": 16,
+        "Month 5 (May 2024)": 26,
+        "Month 6 (Jun 2024)": 12,
+        "Month 7 (Jul 2024)": 14,
+        "Month 8 (Aug 2024)": 143,
+        "Month 9 (Sep 2024)": 19,
+        "Month 10 (Oct 2024)": 21,
+        "Month 11 (Nov 2024)": 18,
+        "Month 12 (Dec 2024)": 8
+    },
+    "churn_reasons": {
+        "by_reason": {
+            "No longer has workforce": 494656.0,
+            "Left for competition": 127320.0,
+            "Missing Product Features": 112290.0,
+            "Compliance": 87091.0,
+            "Pricing": 77387.85
+        },
+        "controllable_total": 404088.85,
+        "uncontrollable_total": 494656.0,
+        "controllable_pct": 45.0,
+        "uncontrollable_pct": 55.0,
+        "controllable_reasons": [
+            "Left for competition",
+            "Missing Product Features",
+            "Pricing",
+            "Compliance"
+        ],
+        "uncontrollable_reasons": [
+            "No longer has workforce"
+        ]
+    },
+    "lifecycle": {
+        "0\u20136 months": {
+            "total": 161,
+            "churned": 34,
+            "churn_rate_pct": 21.12
+        },
+        "6\u201312 months": {
+            "total": 150,
+            "churned": 35,
+            "churn_rate_pct": 23.33
+        },
+        "1\u20132 years": {
+            "total": 295,
+            "churned": 68,
+            "churn_rate_pct": 23.05
+        },
+        "2\u20135 years": {
+            "total": 894,
+            "churned": 191,
+            "churn_rate_pct": 21.36
+        },
+        "5+ years": {
+            "total": 0,
+            "churned": 0,
+            "churn_rate_pct": null
+        }
+    },
+    "efficiency": {
+        "0\u20136 months": 15.0,
+        "6\u201312 months": 15.0,
+        "1\u20132 years": 15.0,
+        "2\u20135 years": 25.31,
+        "5+ years": null
+    },
+    "bleed_analysis": {
+        "tpv_threshold_empirical_pct": -5.0,
+        "bleed_risk_active_accounts": 0,
+        "zombie_accounts": 0,
+        "avg_bleed_score_churned": 0.1433,
+        "avg_bleed_score_active": 0.1227,
+        "interpretation": "Active portfolio shows no bleed signals \u2014 churn pattern is discrete (sharp drop to $0), not gradual decay. Bleed framework is operational; will flag risk in live deployment.",
+        "note": "Bleed Score = 0.4 \u00d7 |% MRR change (M9\u2192M12)| + 0.6 \u00d7 |% TPV change (M9\u2192M12)|. TPV empirical threshold (from churner median): -5.0% drop."
+    },
+    "clusters": {
+        "Cluster 2 \u2014 High-Risk Bleeders": {
+            "count": 157.0,
+            "avg_age_months": 45.29,
+            "avg_tpv_std": 9374.29,
+            "avg_efficiency": 19.12,
+            "avg_mrr": 2923.39,
+            "avg_tpv": 56305.03,
+            "churn_rate": 1.0
+        },
+        "Cluster 0 \u2014 High-Efficiency Scalers": {
+            "count": 348.0,
+            "avg_age_months": 42.85,
+            "avg_tpv_std": 37124.1,
+            "avg_efficiency": 26.69,
+            "avg_mrr": 4101.07,
+            "avg_tpv": 109442.32,
+            "churn_rate": 0.02
+        },
+        "Cluster 3 \u2014 Tenured Stable": {
+            "count": 374.0,
+            "avg_age_months": 41.98,
+            "avg_tpv_std": 18591.02,
+            "avg_efficiency": 26.61,
+            "avg_mrr": 2086.52,
+            "avg_tpv": 55335.17,
+            "churn_rate": 0.03
+        },
+        "Cluster 1 \u2014 Volatile Newcomers": {
+            "count": 621.0,
+            "avg_age_months": 12.72,
+            "avg_tpv_std": 277.72,
+            "avg_efficiency": 14.53,
+            "avg_mrr": 3001.13,
+            "avg_tpv": 45041.9,
+            "churn_rate": 0.24
+        }
+    },
+    "sensitivity": {
+        "avg_mrr_per_account": 2984.04,
+        "note": "Projections use average MRR per account as proxy. Actual impact depends on which accounts churn (high-MRR churners cost more).",
+        "scenarios": [
+            {
+                "churn_rate_pct": 10.0,
+                "scenario_label": "improvement",
+                "accounts_lost_annual": 150,
+                "monthly_mrr_at_risk": 447606.4,
+                "annual_mrr_at_risk": 5371276.8,
+                "annual_saving_vs_current": 6373915.14,
+                "implied_nrr_simplified": 90.0
+            },
+            {
+                "churn_rate_pct": 15.0,
+                "scenario_label": "improvement",
+                "accounts_lost_annual": 225,
+                "monthly_mrr_at_risk": 671409.6,
+                "annual_mrr_at_risk": 8056915.2,
+                "annual_saving_vs_current": 3688276.74,
+                "implied_nrr_simplified": 85.0
+            },
+            {
+                "churn_rate_pct": 21.87,
+                "scenario_label": "current",
+                "accounts_lost_annual": 328,
+                "monthly_mrr_at_risk": 978765.99,
+                "annual_mrr_at_risk": 11745191.88,
+                "annual_saving_vs_current": 0.0,
+                "implied_nrr_simplified": 78.1
+            },
+            {
+                "churn_rate_pct": 25.0,
+                "scenario_label": "deterioration",
+                "accounts_lost_annual": 375,
+                "monthly_mrr_at_risk": 1119016.0,
+                "annual_mrr_at_risk": 13428192.0,
+                "annual_saving_vs_current": -1683000.06,
+                "implied_nrr_simplified": 75.0
+            },
+            {
+                "churn_rate_pct": 30.0,
+                "scenario_label": "deterioration",
+                "accounts_lost_annual": 450,
+                "monthly_mrr_at_risk": 1342819.2,
+                "annual_mrr_at_risk": 16113830.4,
+                "annual_saving_vs_current": -4368638.46,
+                "implied_nrr_simplified": 70.0
+            }
+        ]
+    },
+    "mrr_tpv_trends": {
+        "mrr": [
+            4476064.0,
+            4420445.05,
+            4382798.11,
+            4333209.75,
+            4249141.78,
+            4207359.02,
+            4166702.02,
+            3753738.76,
+            3706721.86,
+            3637893.45,
+            3578838.69,
+            3555135.0
+        ],
+        "tpv": [
+            67140960.0,
+            70278545.08,
+            73992017.64,
+            77851107.18,
+            81403030.21,
+            86218519.28,
+            91302131.03,
+            88345146.23,
+            93608441.43,
+            99061586.05,
+            105001293.08,
+            112695630.73
+        ],
+        "months": [
+            "Month 1 (Jan 2024)",
+            "Month 2 (Feb 2024)",
+            "Month 3 (Mar 2024)",
+            "Month 4 (Apr 2024)",
+            "Month 5 (May 2024)",
+            "Month 6 (Jun 2024)",
+            "Month 7 (Jul 2024)",
+            "Month 8 (Aug 2024)",
+            "Month 9 (Sep 2024)",
+            "Month 10 (Oct 2024)",
+            "Month 11 (Nov 2024)",
+            "Month 12 (Dec 2024)"
+        ]
+    }
+}

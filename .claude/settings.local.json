@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --version && npm --version 2>&1)",
+      "Bash(cd \"C:\\\\Users\\\\USUARIO\\\\Desktop\\\\ontop\\\\prueba\" && ls -la && node --version && npm --version)",
+      "Bash(cd \"C:\\\\Users\\\\USUARIO\\\\Desktop\\\\ontop\\\\prueba\\\\ontop-dashboard\" && npm init -y && npm install react react-dom recharts && npm install -D vite @vitejs/plugin-react 2>&1 | tail -10)",
+      "Bash(cd \"C:\\\\Users\\\\USUARIO\\\\Desktop\\\\ontop\\\\prueba\\\\ontop-dashboard\" && node -e \"const r = require\\('./node_modules/recharts/package.json'\\); console.log\\(r.version\\)\")",
+      "Bash(cd \"C:\\\\Users\\\\USUARIO\\\\Desktop\\\\ontop\\\\prueba\\\\ontop-dashboard\" && node -e \"\nconst r = require\\('./node_modules/recharts'\\);\nconst keys = Object.keys\\(r\\).filter\\(k => !k.startsWith\\('_'\\)\\).sort\\(\\);\nconsole.log\\(keys.slice\\(0, 50\\).join\\(', '\\)\\);\n\")",
+      "Bash(cd \"C:\\\\Users\\\\USUARIO\\\\Desktop\\\\ontop\\\\prueba\\\\ontop-dashboard\" && npm run build 2>&1)"
+    ]
+  }
+}
