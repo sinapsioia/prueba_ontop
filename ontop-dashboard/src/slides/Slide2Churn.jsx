@@ -83,14 +83,14 @@ export default function Slide2Churn({ data }) {
           </div>
         </div>
         <div className="card card-kpi accent-gold">
-          <div className="card-label">Controllable Lost MRR</div>
+          <div className="card-label">CS-Recoverable MRR</div>
           <div className="card-value text-gold">{fmtK(cr.controllable_total)}</div>
-          <div className="card-sub">{cr.controllable_pct}% of losses — CS can act</div>
+          <div className="card-sub">{cr.controllable_pct}% of losses — price, value, competition</div>
         </div>
         <div className="card card-kpi">
-          <div className="card-label">Uncontrollable Lost MRR</div>
+          <div className="card-label">Business Closure MRR</div>
           <div className="card-value text-muted">{fmtK(cr.uncontrollable_total)}</div>
-          <div className="card-sub">{cr.uncontrollable_pct}% — business closures</div>
+          <div className="card-sub">{cr.uncontrollable_pct}% — ICP acquisition signal</div>
         </div>
       </div>
 
@@ -106,8 +106,9 @@ export default function Slide2Churn({ data }) {
           <div className="insight insight-red">
             <IconAlert />
             <span>
-              August 2024: <strong style={{ color: 'var(--red)' }}>143 churns</strong> vs. avg 15/month.
-              Possible annual contract cycle, seasonal pattern, or batch data entry — requires investigation.
+              August 2024: <strong style={{ color: 'var(--red)' }}>143 churns</strong> vs. avg 15/month — a 9.5× spike.
+              This is a <strong>renewal cliff</strong>: annual contracts expiring with no proactive outreach.
+              A 90-day pre-renewal playbook turns this cliff into a managed event.
             </span>
           </div>
           <div style={{ flex: 1, minHeight: 0 }}>
@@ -137,8 +138,8 @@ export default function Slide2Churn({ data }) {
         <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="card-label" style={{ marginBottom: 10 }}>Lost MRR by Reason (pre-churn MRR)</div>
           <div style={{ display: 'flex', gap: 12, fontSize: 11, marginBottom: 10, flexShrink: 0 }}>
-            <span className="badge badge-gold">Controllable — CS can act</span>
-            <span className="badge badge-muted">Uncontrollable</span>
+            <span className="badge badge-gold">CS-recoverable loss</span>
+            <span className="badge badge-muted">Business closures</span>
           </div>
           <div style={{ flex: 1, minHeight: 0 }}>
             <ResponsiveContainer width="100%" height="100%">
@@ -175,9 +176,10 @@ export default function Slide2Churn({ data }) {
             </ResponsiveContainer>
           </div>
           <div style={{ marginTop: 8, fontSize: 12, color: 'var(--muted)', borderTop: '1px solid var(--border)', paddingTop: 8 }}>
-            Focus CS on the{' '}
-            <strong style={{ color: 'var(--gold)' }}>{fmtK(cr.controllable_total)}</strong>{' '}
-            controllable loss. "No longer has workforce" is business closure — not recoverable.
+            <strong style={{ color: 'var(--gold)' }}>{cr.uncontrollable_pct}% of lost MRR is companies that shut down</strong> — not a CS failure, an acquisition problem.
+            If we are consistently landing customers whose businesses don't survive 12 months,{' '}
+            <strong style={{ color: 'var(--text)' }}>our ICP filters need to screen for business stability</strong>{' '}
+            (minimum headcount, company age, operating history). The upstream fix saves more than any CS playbook.
           </div>
         </div>
 

@@ -77,16 +77,16 @@ export default function Slide5Vision({ data }) {
     {
       Icon: IconScore,
       iconColor: 'var(--blue)',
-      title: 'Bleed Score',
-      desc: `Empirical threshold derived from churner data: ${bleed.tpv_threshold_empirical_pct}% TPV drop. Score = 0.4×|MRR Δ| + 0.6×|TPV Δ|.`,
+      title: 'Account Health Score',
+      desc: 'Early-warning metric combining MRR and TPV trend signals. Flags accounts entering decline 1–2 months before they cancel — giving CS a concrete intervention window.',
       status: 'Framework defined',
       badgeClass: 'badge-blue',
     },
     {
       Icon: IconUsers,
       iconColor: 'var(--gold)',
-      title: 'Behavioral Clusters',
-      desc: 'K-Means model identifies 4 profiles. "High-Risk Bleeders" (100% churn rate) is already algorithmically separated.',
+      title: 'Customer Segments',
+      desc: '4 distinct customer profiles identified from behavioral data. High-Risk accounts are separable from stable ones — detectable before they churn.',
       status: 'Model trained',
       badgeClass: 'badge-gold',
     },
@@ -97,8 +97,8 @@ export default function Slide5Vision({ data }) {
       phase: 'Month 1–2',
       Icon: IconRadar,
       iconColor: 'var(--blue)',
-      title: 'Live Bleed Monitor',
-      desc: 'Ingest TPV/MRR data monthly. Score every account. Flag any that cross the empirical TPV threshold.',
+      title: 'Account Health Monitor',
+      desc: 'Run existing TPV/MRR data monthly. Score every account automatically. CS gets a ranked list — no guesswork about where to focus.',
       color: 'var(--blue)',
     },
     {
@@ -113,8 +113,8 @@ export default function Slide5Vision({ data }) {
       phase: 'Month 5–6',
       Icon: IconBrain,
       iconColor: 'var(--purple)',
-      title: 'Predictive Model (v1)',
-      desc: 'Train on early signals (Months 1–4) to predict churn by Month 8. Temporal train/test split avoids data leakage.',
+      title: 'Forward-Looking Churn Prediction',
+      desc: 'Only if Months 1–4 show the health score has predictive power. Earn this phase with results — do not promise it upfront.',
       color: 'var(--purple)',
     },
   ]
@@ -165,11 +165,11 @@ export default function Slide5Vision({ data }) {
               borderRadius: 'var(--radius)', padding: '12px 16px', fontSize: 12, flexShrink: 0
             }}>
               <div style={{ color: 'var(--red)', fontWeight: 700, marginBottom: 4 }}>
-                High-Risk Bleeders: {Math.round(highRiskCluster[1].count)} accounts — 100% churn rate
+                High-Risk segment: {Math.round(highRiskCluster[1].count)} accounts churned at 100%
               </div>
               <div style={{ color: 'var(--muted)', lineHeight: 1.5 }}>
-                This cluster is already algorithmically separable from stable accounts.
-                A live model would have flagged these <strong style={{ color: 'var(--text)' }}>before</strong> they churned.
+                These accounts have a distinct behavioral fingerprint. An early-warning system running today would
+                flag accounts that <strong style={{ color: 'var(--text)' }}>look like this</strong> — before they leave.
               </div>
             </div>
           )}

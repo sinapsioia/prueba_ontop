@@ -10,6 +10,20 @@ const CLUSTER_STYLES = {
   'Volatile Newcomers':      { bg: 'var(--gold-dim)',   border: 'var(--gold)',   text: 'var(--gold)',   barColor: '#f59e0b' },
 }
 
+const CLUSTER_ACTION = {
+  'High-Risk Bleeders':      'ICP mismatch — these profiles should inform acquisition filters so we stop signing similar accounts.',
+  'Volatile Newcomers':      'Onboarding gap — first-90-day structured engagement reduces early churn meaningfully.',
+  'High-Efficiency Scalers': 'Expansion ready — getting more value than they pay for. Prime upsell and advocacy candidates.',
+  'Tenured Stable':          'Your true ICP — define acquisition criteria from this segment and recruit more like them.',
+}
+
+function getClusterAction(name) {
+  for (const key of Object.keys(CLUSTER_ACTION)) {
+    if (name.includes(key)) return CLUSTER_ACTION[key]
+  }
+  return ''
+}
+
 function getClusterStyle(name) {
   for (const key of Object.keys(CLUSTER_STYLES)) {
     if (name.includes(key)) return CLUSTER_STYLES[key]
@@ -95,7 +109,7 @@ export default function Slide3Patterns({ data }) {
         <div>
           <div className="slide-tag">03 · Hidden Patterns</div>
           <h1 className="slide-title">What does the data tell us beneath the surface?</h1>
-          <p className="slide-subtitle">Lifecycle analysis · Efficiency cohorts · Behavioral clustering</p>
+          <p className="slide-subtitle">Lifecycle analysis · Efficiency cohorts · Customer segmentation</p>
         </div>
       </div>
 
@@ -107,8 +121,9 @@ export default function Slide3Patterns({ data }) {
           <div className="insight insight-blue">
             <IconInsight color="var(--blue)" />
             <span>
-              Churn is uniform across all lifecycle stages (~<strong>{avgChurn}%</strong>).
-              No single age group is a priority — it's a cross-portfolio problem.
+              Churn is equally likely at any account age (~<strong>{avgChurn}%</strong>).
+              This is <strong>not an onboarding problem</strong> — it's a sustained engagement deficit.
+              No account is ever "safe."
             </span>
           </div>
           <div style={{ flex: 1, minHeight: 0 }}>
@@ -172,7 +187,7 @@ export default function Slide3Patterns({ data }) {
         {/* Bottom: Cluster cards */}
         <div className="card" style={{ gridColumn: '1 / -1', display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <div className="card-label">Behavioral Clusters — 4 Customer Profiles (K-Means)</div>
+            <div className="card-label">4 Customer Segments — Who are they really?</div>
             <div style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'var(--font-mono)' }}>
               TPV stability · MRR efficiency · Account age
             </div>
@@ -186,6 +201,7 @@ export default function Slide3Patterns({ data }) {
                 : vals.churn_rate < 0.05
                   ? 'var(--green)'
                   : 'var(--gold)'
+              const action = getClusterAction(name)
 
               return (
                 <div key={name} className="cluster-card" style={{ background: style.bg, borderColor: style.border }}>
@@ -206,6 +222,11 @@ export default function Slide3Patterns({ data }) {
                       style={{ width: `${Math.min(Number(churnPct), 100)}%`, background: style.barColor }}
                     />
                   </div>
+                  {action && (
+                    <div style={{ marginTop: 8, fontSize: 10, color: style.text, lineHeight: 1.45, opacity: 0.9 }}>
+                      {action}
+                    </div>
+                  )}
                 </div>
               )
             })}

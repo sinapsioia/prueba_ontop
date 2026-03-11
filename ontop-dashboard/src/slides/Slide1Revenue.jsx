@@ -1,6 +1,6 @@
 import {
   ComposedChart, Bar, Line, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Cell, ReferenceLine
+  Tooltip, ResponsiveContainer, Cell, ReferenceLine, LabelList
 } from 'recharts'
 
 const fmt  = (n) => `$${(n / 1_000_000).toFixed(2)}M`
@@ -125,6 +125,21 @@ export default function Slide1Revenue({ data }) {
                   {waterfallData.map((entry, i) => (
                     <Cell key={i} fill={entry.color} fillOpacity={entry.solid ? 1 : 0.85} />
                   ))}
+                  <LabelList content={(props) => {
+                    const { x, y, width, index } = props
+                    const entry = waterfallData[index]
+                    if (!entry || entry.solid) return null
+                    const isExpansion = entry.name === 'Expansion'
+                    const sign  = isExpansion ? '▲' : '▼'
+                    const color = isExpansion ? '#22c55e' : '#ef4444'
+                    return (
+                      <text x={x + width / 2} y={y - 5} textAnchor="middle"
+                        fill={color} fontSize={9} fontWeight={700}
+                        fontFamily="JetBrains Mono, monospace">
+                        {sign} {fmtK(entry.value)}
+                      </text>
+                    )
+                  }} />
                 </Bar>
               </ComposedChart>
             </ResponsiveContainer>
