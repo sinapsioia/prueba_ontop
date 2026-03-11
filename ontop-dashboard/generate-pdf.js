@@ -111,6 +111,14 @@ async function main() {
     // Set viewport — high-DPI capture
     await page.setViewport({ width: VP_W, height: VP_H, deviceScaleFactor: SCALE })
 
+    // Disable ALL animations before the page loads:
+    //   1. Our CSS already has: @media (prefers-reduced-motion: reduce) { * { animation: none } }
+    //   2. Recharts 3 checks this media query and skips chart entry animations
+    // Without this, charts are captured mid-animation and appear empty.
+    await page.emulateMediaFeatures([
+      { name: 'prefers-reduced-motion', value: 'reduce' },
+    ])
+
     // 3. Load the app
     process.stdout.write('  Loading app ...')
     await page.goto(`http://localhost:${PORT}`, {
@@ -118,8 +126,8 @@ async function main() {
       timeout:   30_000,
     })
 
-    // Wait for fonts (Google Fonts CDN) and CSS transitions to settle
-    await new Promise(r => setTimeout(r, 2000))
+    // Wait for fonts (Google Fonts CDN) and initial render to complete
+    await new Promise(r => setTimeout(r, 2500))
     console.log(' done')
 
     // 4. Screenshot each slide
@@ -129,8 +137,8 @@ async function main() {
     for (let i = 0; i < SLIDES; i++) {
       process.stdout.write(`  Slide ${i + 1}/${SLIDES}  capturing ...`)
 
-      // Let entrance animation finish before shooting
-      await new Promise(r => setTimeout(r, 400))
+      // Short settle after slide change
+      await new Promise(r => setTimeout(r, 600))
 
       const buffer = await page.screenshot({
         type:     'png',
