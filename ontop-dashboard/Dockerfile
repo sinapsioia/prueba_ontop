@@ -3,6 +3,9 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Skip Chromium download — puppeteer is only used locally for PDF generation
+ENV PUPPETEER_SKIP_DOWNLOAD=true
+
 # Install dependencies first (layer cached if package.json unchanged)
 COPY package*.json ./
 RUN npm ci
