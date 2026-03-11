@@ -1,20 +1,25 @@
-/* ── Fintech/SaaS Design System ─────────────────────────────────
-   Based on ui-ux-pro-max recommendations:
+/* ── Ontop CS Dashboard Design System ───────────────────────────
+   Brand alignment: getontop.com
    Style:      Dark Mode OLED + Executive Dashboard
-   Palette:    Fintech/Crypto — gold trust + blue data + purple tech
-   Typography: Calistoga (display) + Inter (body)
-   Effects:    Glassmorphism nav, card hover lift, minimal glow
+   Palette:    Ontop Coral + Navy + Blue data + Green positive
+   Typography: Montserrat (brand) + Inter (body) + JetBrains Mono
+   Effects:    Glassmorphism nav, coral glow accents, mesh bg
    ─────────────────────────────────────────────────────────────── */
 
 :root {
   /* ── OLED-friendly dark base ──────────────────────────────── */
-  --bg:          #080c18;
-  --surface:     #0c1122;
-  --card:        #0f1629;
-  --card-glass:  rgba(255, 255, 255, 0.03);
-  --card-hover:  #131d35;
+  --bg:          #07090f;
+  --surface:     #0b0e1a;
+  --card:        #0e1220;
+  --card-glass:  rgba(255, 255, 255, 0.025);
+  --card-hover:  #131929;
 
-  /* ── Fintech palette — gold trust + blue data ─────────────── */
+  /* ── Ontop brand coral — primary accent ───────────────────── */
+  --coral:       #FF5A70;
+  --coral-dim:   rgba(255, 90, 112, 0.12);
+  --coral-glow:  rgba(255, 90, 112, 0.28);
+
+  /* ── Fintech palette ──────────────────────────────────────── */
   --gold:        #f59e0b;
   --gold-dim:    rgba(245, 158, 11, 0.12);
   --gold-glow:   rgba(245, 158, 11, 0.25);
@@ -36,37 +41,39 @@
   --purple-dim:  rgba(139, 92, 246, 0.12);
   --purple-glow: rgba(139, 92, 246, 0.25);
 
-  /* ── Semantic tokens ──────────────────────────────────────── */
-  --positive: var(--green);
-  --negative: var(--red);
-  --warning:  var(--gold);
-  --neutral:  var(--blue);
-  --tech:     var(--purple);
-
   /* ── Aliases ─────────────────────────────────────────────── */
-  --amber:     var(--gold);
-  --amber-dim: var(--gold-dim);
+  --amber:       var(--gold);
+  --amber-dim:   var(--gold-dim);
+
+  /* ── Semantic tokens ──────────────────────────────────────── */
+  --positive:  var(--green);
+  --negative:  var(--red);
+  --warning:   var(--gold);
+  --neutral:   var(--blue);
+  --tech:      var(--purple);
+  --brand:     var(--coral);
 
   /* ── Text ─────────────────────────────────────────────────── */
   --text:      #eef2ff;
   --text-dim:  #c7d2f0;
   --muted:     #7c8db5;
-  --subtle:    #334162;
+  --subtle:    #2a3454;
 
   /* ── Borders ──────────────────────────────────────────────── */
   --border:       rgba(255, 255, 255, 0.06);
   --border-focus: rgba(59, 130, 246, 0.4);
 
   /* ── Shadows ──────────────────────────────────────────────── */
-  --shadow-card:  0 2px 12px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-lift:  0 8px 32px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-glow-gold:   0 0 20px rgba(245, 158, 11, 0.15);
-  --shadow-glow-blue:   0 0 20px rgba(59, 130, 246, 0.15);
-  --shadow-glow-green:  0 0 20px rgba(34, 197, 94, 0.15);
-  --shadow-glow-red:    0 0 20px rgba(239, 68, 68, 0.15);
+  --shadow-card:       0 2px 12px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-lift:       0 8px 32px rgba(0, 0, 0, 0.65), 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-glow-coral: 0 0 24px rgba(255, 90, 112, 0.18);
+  --shadow-glow-gold:  0 0 20px rgba(245, 158, 11, 0.15);
+  --shadow-glow-blue:  0 0 20px rgba(59, 130, 246, 0.15);
+  --shadow-glow-green: 0 0 20px rgba(34, 197, 94, 0.15);
+  --shadow-glow-red:   0 0 20px rgba(239, 68, 68, 0.15);
 
   /* ── Typography ───────────────────────────────────────────── */
-  --font-display: 'Calistoga', serif;
+  --font-display: 'Montserrat', system-ui, sans-serif;
   --font-body:    'Inter', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', monospace;
 
@@ -76,9 +83,9 @@
   --radius-xs: 5px;
 
   /* ── Motion ───────────────────────────────────────────────── */
-  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in:    cubic-bezier(0.7, 0, 0.84, 0);
-  --duration:   200ms;
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:   cubic-bezier(0.7, 0, 0.84, 0);
+  --duration:  200ms;
 }
 
 /* ── Reset ──────────────────────────────────────────────────────── */
@@ -110,8 +117,38 @@ body {
   padding: 32px 48px 72px;
   gap: 18px;
   overflow: hidden;
+  position: relative;
 }
 
+/* Subtle brand glow — top-left ambient light */
+.slide::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  left: -80px;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(255, 90, 112, 0.05) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Bottom-right dim blue counter-glow */
+.slide::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  right: -60px;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.04) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.slide > * { position: relative; z-index: 1; }
+
+/* ── Slide header ────────────────────────────────────────────────── */
 .slide-header {
   display: flex;
   align-items: flex-start;
@@ -121,21 +158,21 @@ body {
 
 .slide-tag {
   font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--gold);
-  margin-bottom: 5px;
+  color: var(--coral);
+  margin-bottom: 6px;
   font-family: var(--font-mono);
 }
 
 .slide-title {
   font-family: var(--font-display);
-  font-size: 27px;
-  font-weight: 400;           /* Calistoga is naturally heavy */
+  font-size: 26px;
+  font-weight: 800;
   color: var(--text);
   line-height: 1.15;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
 .slide-subtitle {
@@ -184,9 +221,10 @@ body {
   border-radius: 3px 0 0 3px;
   background: var(--kpi-accent, var(--blue));
 }
+.card-kpi.accent-coral  { --kpi-accent: var(--coral);  box-shadow: var(--shadow-card), var(--shadow-glow-coral);  }
 .card-kpi.accent-gold   { --kpi-accent: var(--gold);   box-shadow: var(--shadow-card), var(--shadow-glow-gold);   }
 .card-kpi.accent-green  { --kpi-accent: var(--green);  box-shadow: var(--shadow-card), var(--shadow-glow-green);  }
-.card-kpi.accent-red    { --kpi-accent: var(--red);    box-shadow: var(--shadow-card), var(--shadow-glow-red,0);   }
+.card-kpi.accent-red    { --kpi-accent: var(--red);    box-shadow: var(--shadow-card), var(--shadow-glow-red);    }
 .card-kpi.accent-blue   { --kpi-accent: var(--blue);   box-shadow: var(--shadow-card), var(--shadow-glow-blue);   }
 
 .card-label {
@@ -205,13 +243,14 @@ body {
   line-height: 1;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.02em;
+  font-family: var(--font-display);
 }
 
 .card-value-hero {
   font-family: var(--font-display);
-  font-size: 48px;
-  font-weight: 400;
-  letter-spacing: -0.02em;
+  font-size: 44px;
+  font-weight: 900;
+  letter-spacing: -0.03em;
   line-height: 1;
 }
 
@@ -234,7 +273,7 @@ body {
   border-radius: var(--radius-sm);
   padding: 8px 12px;
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.55;
   display: flex;
   align-items: flex-start;
   gap: 8px;
@@ -247,6 +286,7 @@ body {
 .insight-green  { background: var(--green-dim);  border-color: rgba(34,197,94,0.2);   color: var(--text-dim); }
 .insight-red    { background: var(--red-dim);    border-color: rgba(239,68,68,0.2);   color: var(--text-dim); }
 .insight-gold   { background: var(--gold-dim);   border-color: rgba(245,158,11,0.2);  color: var(--text-dim); }
+.insight-coral  { background: var(--coral-dim);  border-color: rgba(255,90,112,0.2);  color: var(--text-dim); }
 .insight-purple { background: var(--purple-dim); border-color: rgba(139,92,246,0.2);  color: var(--text-dim); }
 
 /* ── Badge ───────────────────────────────────────────────────────── */
@@ -262,14 +302,21 @@ body {
   font-family: var(--font-mono);
   letter-spacing: 0.04em;
 }
-.badge-gold   { background: var(--gold-dim);   color: var(--gold);   border: 1px solid rgba(245,158,11,0.3);   }
-.badge-green  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(34,197,94,0.3);    }
-.badge-red    { background: var(--red-dim);    color: var(--red);    border: 1px solid rgba(239,68,68,0.3);    }
-.badge-blue   { background: var(--blue-dim);   color: var(--blue);   border: 1px solid rgba(59,130,246,0.3);   }
-.badge-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(139,92,246,0.3);   }
+.badge-coral  { background: var(--coral-dim);  color: var(--coral);  border: 1px solid rgba(255,90,112,0.3);  }
+.badge-gold   { background: var(--gold-dim);   color: var(--gold);   border: 1px solid rgba(245,158,11,0.3);  }
+.badge-green  { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(34,197,94,0.3);   }
+.badge-red    { background: var(--red-dim);    color: var(--red);    border: 1px solid rgba(239,68,68,0.3);   }
+.badge-blue   { background: var(--blue-dim);   color: var(--blue);   border: 1px solid rgba(59,130,246,0.3);  }
+.badge-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(139,92,246,0.3);  }
 .badge-muted  { background: rgba(124,141,181,0.1); color: var(--muted); border: 1px solid rgba(124,141,181,0.2); }
 
 /* ── Gradient text ───────────────────────────────────────────────── */
+.text-gradient-coral {
+  background: linear-gradient(135deg, var(--coral) 0%, #ff8fa0 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 .text-gradient-gold {
   background: linear-gradient(135deg, var(--gold) 0%, #fbbf24 100%);
   -webkit-background-clip: text;
@@ -296,6 +343,7 @@ body {
 }
 
 /* ── Utility text colors ─────────────────────────────────────────── */
+.text-coral  { color: var(--coral);  }
 .text-gold   { color: var(--gold);   }
 .text-green  { color: var(--green);  }
 .text-red    { color: var(--red);    }
@@ -312,14 +360,14 @@ body {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: rgba(12, 17, 34, 0.82);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(11, 14, 26, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 50px;
   padding: 9px 18px;
   z-index: 100;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .nav-btn {
@@ -335,9 +383,9 @@ body {
   transition: all var(--duration) var(--ease-out);
 }
 .nav-btn:hover:not(:disabled) {
-  background: var(--blue-dim);
-  border-color: var(--blue);
-  color: var(--blue-bright);
+  background: var(--coral-dim);
+  border-color: var(--coral);
+  color: var(--coral);
 }
 .nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
 
@@ -352,10 +400,10 @@ body {
   transition: all var(--duration) var(--ease-out);
 }
 .nav-dot.active {
-  background: var(--gold);
+  background: var(--coral);
   width: 20px;
   border-radius: 3px;
-  box-shadow: 0 0 8px var(--gold-glow);
+  box-shadow: 0 0 10px var(--coral-glow);
 }
 .nav-dot:hover:not(.active) { background: var(--muted); }
 
@@ -367,16 +415,6 @@ body {
   letter-spacing: 0.04em;
 }
 
-/* ── Brand wordmark ──────────────────────────────────────────────── */
-.brand {
-  font-family: var(--font-display);
-  font-size: 18px;
-  color: var(--gold);
-  letter-spacing: 0.03em;
-  opacity: 0.9;
-  text-shadow: 0 0 20px var(--gold-glow);
-}
-
 /* ── Divider ─────────────────────────────────────────────────────── */
 .divider {
   border: none;
@@ -385,17 +423,17 @@ body {
 
 /* ── Recharts custom tooltip ─────────────────────────────────────── */
 .custom-tooltip {
-  background: #0f1a2e;
-  border: 1px solid rgba(255,255,255,0.1);
+  background: #0a0e1c;
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: var(--radius-sm);
   padding: 10px 14px;
   font-size: 12px;
   color: var(--text);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
 }
 .custom-tooltip .ct-label {
   color: var(--muted);
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   font-weight: 600;
   font-family: var(--font-mono);
   font-size: 10px;
@@ -434,7 +472,7 @@ body {
   transition: background var(--duration) ease;
 }
 .scenario-table tr.row-current td { background: var(--gold-dim); }
-.scenario-table tr:hover td { background: rgba(255,255,255,0.03); }
+.scenario-table tr:hover td { background: rgba(255,255,255,0.025); }
 .scenario-table td.num { text-align: right; font-family: var(--font-mono); }
 
 /* ── Cluster card ────────────────────────────────────────────────── */
@@ -455,6 +493,7 @@ body {
   font-weight: 700;
   font-size: 12px;
   letter-spacing: 0.01em;
+  font-family: var(--font-display);
 }
 .cluster-stats {
   display: grid;
@@ -477,4 +516,13 @@ body {
   height: 100%;
   border-radius: 2px;
   transition: width 0.6s var(--ease-out);
+}
+
+/* ── Risk area chart annotation ──────────────────────────────────── */
+.risk-annotation {
+  position: absolute;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  pointer-events: none;
 }

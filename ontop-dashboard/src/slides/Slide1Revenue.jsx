@@ -77,7 +77,6 @@ export default function Slide1Revenue({ data }) {
             Jan 2024 – Dec 2024 · {data.metadata.total_accounts.toLocaleString()} accounts
           </p>
         </div>
-        <span className="brand">ontop</span>
       </div>
 
       {/* KPI row */}

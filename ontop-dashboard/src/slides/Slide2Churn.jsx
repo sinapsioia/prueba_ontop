@@ -62,7 +62,6 @@ export default function Slide2Churn({ data }) {
           <h1 className="slide-title">Why are customers leaving — and when?</h1>
           <p className="slide-subtitle">Formal churn analysis · Jan–Dec 2024</p>
         </div>
-        <span className="brand">ontop</span>
       </div>
 
       {/* KPI row */}

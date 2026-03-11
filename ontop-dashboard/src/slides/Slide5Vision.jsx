@@ -131,7 +131,6 @@ export default function Slide5Vision({ data }) {
             The data we already have is sufficient to build an early warning system.
           </p>
         </div>
-        <span className="brand">ontop</span>
       </div>
 
       <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, minHeight: 0 }}>

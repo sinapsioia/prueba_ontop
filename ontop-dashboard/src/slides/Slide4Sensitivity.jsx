@@ -1,9 +1,24 @@
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, Cell, ReferenceLine, LabelList
+  AreaChart, Area, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, ReferenceLine
 } from 'recharts'
 
 const fmtM = (n) => `$${(n / 1_000_000).toFixed(2)}M`
+
+// Custom dot renderer — large amber for current, small colored for others
+function RiskDot(props) {
+  const { cx, cy, payload } = props
+  if (payload.isCurrent) {
+    return (
+      <g>
+        <circle cx={cx} cy={cy} r={12} fill="rgba(245,158,11,0.18)" />
+        <circle cx={cx} cy={cy} r={7} fill="#f59e0b" stroke="#07090f" strokeWidth={2} />
+      </g>
+    )
+  }
+  const color = payload.isImprovement ? '#22c55e' : '#ef4444'
+  return <circle cx={cx} cy={cy} r={5} fill={color} stroke="#07090f" strokeWidth={1.5} />
+}
 
 export default function Slide4Sensitivity({ data }) {
   const sens      = data.sensitivity
@@ -20,12 +35,6 @@ export default function Slide4Sensitivity({ data }) {
     raw: s,
   }))
 
-  const barColor = (d) => {
-    if (d.isCurrent)     return 'var(--gold)'
-    if (d.isImprovement) return 'var(--green)'
-    return 'var(--red)'
-  }
-
   const saving15 = scenarios.find(s => s.churn_rate_pct === 15)?.annual_saving_vs_current || 0
 
   return (
@@ -39,36 +48,62 @@ export default function Slide4Sensitivity({ data }) {
             <span style={{ color: 'var(--muted)', fontSize: 12 }}>{sens.note}</span>
           </p>
         </div>
-        <span className="brand">ontop</span>
       </div>
 
       <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 16, minHeight: 0 }}>
 
-        {/* Bar chart */}
+        {/* ── Risk curve — AreaChart ─────────────────────────────── */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <div className="card-label">Annual MRR at Risk by Churn Rate Scenario</div>
-            <div style={{ display: 'flex', gap: 8, fontSize: 11 }}>
+            <div className="card-label">Annual MRR at Risk — Churn Rate Scenarios</div>
+            <div style={{ display: 'flex', gap: 8 }}>
               <span className="badge badge-green">Improvement</span>
               <span className="badge badge-gold">Current</span>
               <span className="badge badge-red">Deterioration</span>
             </div>
           </div>
+
           <div style={{ flex: 1, minHeight: 0 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 16, right: 16, bottom: 0, left: 10 }}>
+              <AreaChart data={chartData} margin={{ top: 20, right: 20, bottom: 8, left: 10 }}>
+                <defs>
+                  {/* Horizontal gradient: green → amber → red (left to right) */}
+                  <linearGradient id="riskStroke" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%"   stopColor="#22c55e" />
+                    <stop offset="38%"  stopColor="#f59e0b" />
+                    <stop offset="100%" stopColor="#ef4444" />
+                  </linearGradient>
+                  {/* Area fill: same gradient but semi-transparent */}
+                  <linearGradient id="riskFill" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%"   stopColor="#22c55e" stopOpacity={0.18} />
+                    <stop offset="38%"  stopColor="#f59e0b" stopOpacity={0.22} />
+                    <stop offset="100%" stopColor="#ef4444" stopOpacity={0.32} />
+                  </linearGradient>
+                </defs>
+
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+
                 <XAxis
                   dataKey="label"
                   tick={{ fill: 'var(--muted)', fontSize: 11 }}
-                  axisLine={false} tickLine={false}
-                  label={{ value: 'Annual Churn Rate', position: 'insideBottom', offset: -4, fill: 'var(--muted)', fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                  label={{
+                    value: 'Annual Churn Rate',
+                    position: 'insideBottom',
+                    offset: -2,
+                    fill: 'var(--muted)',
+                    fontSize: 10,
+                  }}
                 />
                 <YAxis
                   tickFormatter={v => `$${v}M`}
                   tick={{ fill: 'var(--muted)', fontSize: 10 }}
-                  axisLine={false} tickLine={false} width={46}
+                  axisLine={false}
+                  tickLine={false}
+                  width={46}
                 />
+
                 <Tooltip
                   content={({ active, payload, label }) => {
                     if (!active || !payload?.length) return null
@@ -94,36 +129,49 @@ export default function Slide4Sensitivity({ data }) {
                     )
                   }}
                 />
+
+                {/* Vertical line at current rate */}
                 <ReferenceLine
-                  y={current ? current.annual_mrr_at_risk / 1_000_000 : undefined}
-                  stroke="var(--gold)" strokeDasharray="5 5" strokeWidth={1.5}
+                  x={`${current?.churn_rate_pct}%`}
+                  stroke="rgba(245,158,11,0.5)"
+                  strokeDasharray="5 4"
+                  strokeWidth={1.5}
+                  label={{
+                    value: 'Today',
+                    fill: 'var(--gold)',
+                    fontSize: 10,
+                    fontFamily: 'JetBrains Mono, monospace',
+                    fontWeight: 700,
+                    position: 'top',
+                  }}
                 />
-                <Bar dataKey="annual" radius={[6, 6, 0, 0]}>
-                  {chartData.map((entry, i) => (
-                    <Cell key={i} fill={barColor(entry)} fillOpacity={entry.isCurrent ? 1 : 0.75} />
-                  ))}
-                  <LabelList
-                    dataKey="annual"
-                    position="top"
-                    style={{ fill: 'var(--text)', fontSize: 11, fontWeight: 600 }}
-                    formatter={v => `$${v}M`}
-                  />
-                </Bar>
-              </BarChart>
+
+                <Area
+                  type="monotone"
+                  dataKey="annual"
+                  stroke="url(#riskStroke)"
+                  strokeWidth={3}
+                  fill="url(#riskFill)"
+                  dot={<RiskDot />}
+                  activeDot={{ r: 7, stroke: '#07090f', strokeWidth: 2 }}
+                />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Right panel */}
+        {/* ── Right panel ───────────────────────────────────────── */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
 
           {/* Hero saving callout */}
           <div style={{
-            background: 'var(--green-dim)', border: '1px solid var(--green)',
-            borderRadius: 'var(--radius)', padding: '16px 20px',
-            boxShadow: 'var(--shadow-glow-green)'
+            background: 'var(--green-dim)',
+            border: '1px solid var(--green)',
+            borderRadius: 'var(--radius)',
+            padding: '16px 20px',
+            boxShadow: 'var(--shadow-glow-green)',
           }}>
-            <div className="card-label" style={{ color: 'var(--green)', marginBottom: 6 }}>
+            <div className="card-label" style={{ color: 'var(--green)', marginBottom: 8 }}>
               Reducing churn 21.9% → 15%
             </div>
             <div className="card-value-hero text-gradient-green">

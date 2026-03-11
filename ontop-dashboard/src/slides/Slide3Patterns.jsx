@@ -3,7 +3,6 @@ import {
   Tooltip, ResponsiveContainer, Cell, ReferenceLine
 } from 'recharts'
 
-// Cluster visual config
 const CLUSTER_STYLES = {
   'High-Risk Bleeders':      { bg: 'var(--red-dim)',    border: 'var(--red)',    text: 'var(--red)',    barColor: '#ef4444' },
   'High-Efficiency Scalers': { bg: 'var(--green-dim)',  border: 'var(--green)',  text: 'var(--green)',  barColor: '#22c55e' },
@@ -23,6 +22,40 @@ function IconInsight({ color = 'var(--blue)' }) {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color, flexShrink: 0, marginTop: 1 }}>
       <path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/>
     </svg>
+  )
+}
+
+// ── Lollipop bar: replaces standard BarChart for efficiency ────────
+// Each cohort = a thin stem + a labeled circle at the top.
+// Far more readable for showing scale differences (25x vs 1x).
+function LollipopShape(props) {
+  const { x, y, width, height, value } = props
+  if (!value) return null
+
+  const cx   = x + width / 2
+  const isHigh = value > 20
+  const color  = isHigh ? '#22c55e' : '#3b82f6'
+  const r      = isHigh ? 17 : 13
+
+  return (
+    <g>
+      {/* Stem */}
+      <rect x={cx - 1.5} y={y + r} width={3} height={height - r} fill={color} opacity={0.22} rx={1.5} />
+      {/* Circle */}
+      <circle cx={cx} cy={y + r} r={r} fill={color} fillOpacity={isHigh ? 0.92 : 0.72} />
+      {/* Value label */}
+      <text
+        x={cx} y={y + r}
+        textAnchor="middle"
+        dominantBaseline="central"
+        fill="white"
+        fontSize={isHigh ? 10 : 9}
+        fontWeight={700}
+        fontFamily="JetBrains Mono, monospace"
+      >
+        {value.toFixed(0)}x
+      </text>
+    </g>
   )
 }
 
@@ -64,7 +97,6 @@ export default function Slide3Patterns({ data }) {
           <h1 className="slide-title">What does the data tell us beneath the surface?</h1>
           <p className="slide-subtitle">Lifecycle analysis · Efficiency cohorts · Behavioral clustering</p>
         </div>
-        <span className="brand">ontop</span>
       </div>
 
       <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr', gap: 16, minHeight: 0 }}>
@@ -94,27 +126,31 @@ export default function Slide3Patterns({ data }) {
                   contentStyle={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
                   labelFormatter={l => `Cohort: ${l}`}
                 />
-                <ReferenceLine y={Number(avgChurn)} stroke="var(--gold)" strokeDasharray="4 4"
-                  label={{ value: `avg ${avgChurn}%`, fill: 'var(--gold)', fontSize: 10, position: 'right' }} />
-                <Bar dataKey="churn_rate" radius={[4, 4, 0, 0]} fill="var(--blue)" fillOpacity={0.8} />
+                <ReferenceLine y={Number(avgChurn)} stroke="var(--coral)" strokeDasharray="4 4"
+                  label={{ value: `avg ${avgChurn}%`, fill: 'var(--coral)', fontSize: 10, position: 'right' }} />
+                <Bar dataKey="churn_rate" radius={[4, 4, 0, 0]}>
+                  {cohortChurnData.map((entry, i) => (
+                    <Cell key={i} fill="var(--blue)" fillOpacity={0.7} />
+                  ))}
+                </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Top-right: Efficiency */}
+        {/* Top-right: Efficiency — LOLLIPOP chart */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="card-label">TPV/MRR Efficiency by Account Age</div>
           <div className="insight insight-green">
             <IconInsight color="var(--green)" />
             <span>
-              Accounts aged 2–5 years are <strong style={{ color: 'var(--green)' }}>25× more efficient</strong> than younger cohorts.
-              Highest LTV segment — protect at all costs.
+              Accounts aged 2–5 years are <strong style={{ color: 'var(--green)' }}>25× more efficient</strong>.
+              Highest LTV segment — protect and expand at all costs.
             </span>
           </div>
           <div style={{ flex: 1, minHeight: 0 }}>
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={efficiencyData} margin={{ top: 4, right: 8, bottom: 0, left: 0 }}>
+              <BarChart data={efficiencyData} margin={{ top: 20, right: 8, bottom: 0, left: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
                 <XAxis dataKey="cohort" tick={{ fill: 'var(--muted)', fontSize: 10 }} axisLine={false} tickLine={false} />
                 <YAxis
@@ -123,15 +159,11 @@ export default function Slide3Patterns({ data }) {
                   axisLine={false} tickLine={false} width={34}
                 />
                 <Tooltip
-                  formatter={v => [`${v}x`, 'TPV/MRR']}
+                  formatter={v => [`${v}x`, 'TPV/MRR Efficiency']}
                   contentStyle={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, fontSize: 12 }}
                   labelFormatter={l => `Cohort: ${l}`}
                 />
-                <Bar dataKey="ratio" radius={[4, 4, 0, 0]}>
-                  {efficiencyData.map((entry, i) => (
-                    <Cell key={i} fill={entry.ratio > 20 ? 'var(--green)' : 'var(--blue)'} fillOpacity={entry.ratio > 20 ? 1 : 0.6} />
-                  ))}
-                </Bar>
+                <Bar dataKey="ratio" shape={<LollipopShape />} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -148,7 +180,7 @@ export default function Slide3Patterns({ data }) {
 
           <div style={{ flex: 1, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12 }}>
             {clusterEntries.map(({ name, vals, style }) => {
-              const churnPct = (vals.churn_rate * 100).toFixed(0)
+              const churnPct  = (vals.churn_rate * 100).toFixed(0)
               const churnColor = vals.churn_rate > 0.5
                 ? 'var(--red)'
                 : vals.churn_rate < 0.05
@@ -156,11 +188,7 @@ export default function Slide3Patterns({ data }) {
                   : 'var(--gold)'
 
               return (
-                <div
-                  key={name}
-                  className="cluster-card"
-                  style={{ background: style.bg, borderColor: style.border }}
-                >
+                <div key={name} className="cluster-card" style={{ background: style.bg, borderColor: style.border }}>
                   <div className="cluster-card-name" style={{ color: style.text }}>{name}</div>
                   <div className="cluster-stats">
                     <span className="stat-label">Accounts</span>
