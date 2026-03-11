@@ -8,7 +8,7 @@ ENV PUPPETEER_SKIP_DOWNLOAD=true
 
 # Install dependencies first (layer cached if package.json unchanged)
 COPY package*.json ./
-RUN npm ci
+RUN npm install --prefer-offline
 
 # Copy source and build
 COPY . .
