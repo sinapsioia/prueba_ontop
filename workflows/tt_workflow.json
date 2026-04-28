@@ -4660,7 +4660,8 @@
     "availableInMCP": false,
     "callerPolicy": "workflowsFromSameOwner",
     "timezone": "America/Bogota",
-    "binaryMode": "separate"
+    "binaryMode": "separate",
+    "errorWorkflow": "RTUCboEcmvfBy7ps"
   },
   "staticData": {
     "node:Twilio Trigger Demos": {
