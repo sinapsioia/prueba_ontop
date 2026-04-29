@@ -1558,9 +1558,9 @@
         "operation": "analyze",
         "modelId": {
           "__rl": true,
-          "value": "models/gemini-2.5-flash",
+          "value": "models/gemini-2.0-flash",
           "mode": "list",
-          "cachedResultName": "models/gemini-2.5-flash"
+          "cachedResultName": "models/gemini-2.0-flash"
         },
         "text": "Transcribeme exactamente el mensaje del audio, la idea es que actues como voice to text",
         "inputType": "binary",
@@ -2538,9 +2538,9 @@
         "operation": "analyze",
         "modelId": {
           "__rl": true,
-          "value": "models/gemini-2.5-flash",
+          "value": "models/gemini-2.0-flash",
           "mode": "list",
-          "cachedResultName": "models/gemini-2.5-flash"
+          "cachedResultName": "models/gemini-2.0-flash"
         },
         "text": "Analiza este archivo enviado por un cliente de Turntable Dealer (sala de ensayo para DJs en Bogotá).\n\nDetermina si es un comprobante o recibo de pago de CUALQUIER tipo: transferencia Nequi, Daviplata, Bancolombia, PSE, Llave, depósito, u otro sistema de pago colombiano o internacional.\n\nCRITERIO AMPLIO: Si la imagen/documento muestra cualquiera de estos elementos, ES un comprobante:\n• Un monto o valor en pesos o cualquier moneda\n• Un número de transacción, referencia o código de operación\n• Un número de cuenta, teléfono destino o beneficiario\n• Palabras como: transferencia, pago, recibo, comprobante, transacción, depósito, exitoso, aprobado\n• Capturas de apps bancarias, wallets digitales o pagos en línea\n\nSi ES un comprobante (usando criterio amplio), responde EXACTAMENTE:\nES_COMPROBANTE: SI\nMONTO: [número sin separadores, solo dígitos; 0 si no visible]\nDESTINO: [número de teléfono, cuenta o identificador del destinatario; vacío si no visible]\nBANCO_ORIGEN: [banco o app de origen; 'No identificado' si no es claro]\nFECHA: [fecha de la transacción; vacío si no visible]\n\nSi DEFINITIVAMENTE NO es un comprobante de pago (foto personal, captura de chat, etc.):\nES_COMPROBANTE: NO\nDESCRIPCION: [qué es en una línea]\n\nResponde SOLO con el formato indicado.",
         "inputType": "binary",
@@ -3577,9 +3577,9 @@
         "operation": "analyze",
         "modelId": {
           "__rl": true,
-          "value": "models/gemini-2.5-flash",
+          "value": "models/gemini-2.0-flash",
           "mode": "list",
-          "cachedResultName": "models/gemini-2.5-flash"
+          "cachedResultName": "models/gemini-2.0-flash"
         },
         "text": "Eres un auditor de comprobantes de pago para Turntable Dealer, Bogotá.\n\nUn análisis previo determinó que esta imagen/archivo NO es un comprobante. Tu rol es hacer una segunda revisión más cuidadosa.\n\nRevisa si hay CUALQUIER indicio de que esto sea un pago, transferencia, recibo o confirmación financiera, incluyendo:\n• Capturas borrosas o parciales de apps de pago\n• Recibos en papel fotografiados\n• Comprobantes de transferencias internacionales\n• Confirmaciones de PSE, tarjeta débito/crédito\n• Cualquier documento con números que parezcan un monto + destinatario\n\nSi hay ALGUNA posibilidad razonable de que sea un comprobante:\nAUDITORIA: SI\nMONTO: [número sin separadores; 0 si no visible]\nDESTINO: [número destino; vacío si no visible]\nCONFIANZA: [ALTA / MEDIA / BAJA]\n\nSi definitivamente NO es un comprobante de pago:\nAUDITORIA: NO\nRAZON: [por qué no es un comprobante]\n\nResponde SOLO con el formato indicado.",
         "inputType": "url",
@@ -6268,9 +6268,9 @@
           "operation": "analyze",
           "modelId": {
             "__rl": true,
-            "value": "models/gemini-2.5-flash",
+            "value": "models/gemini-2.0-flash",
             "mode": "list",
-            "cachedResultName": "models/gemini-2.5-flash"
+            "cachedResultName": "models/gemini-2.0-flash"
           },
           "text": "Transcribeme exactamente el mensaje del audio, la idea es que actues como voice to text",
           "inputType": "binary",
@@ -7248,9 +7248,9 @@
           "operation": "analyze",
           "modelId": {
             "__rl": true,
-            "value": "models/gemini-2.5-flash",
+            "value": "models/gemini-2.0-flash",
             "mode": "list",
-            "cachedResultName": "models/gemini-2.5-flash"
+            "cachedResultName": "models/gemini-2.0-flash"
           },
           "text": "Analiza esta imagen enviada por un cliente de Turntable Dealer (sala de ensayo para DJs en Bogotá).\n\nDetermina si es un comprobante de pago (transferencia Nequi, Daviplata, Bancolombia, etc.).\n\nSi ES un comprobante, extrae EXACTAMENTE en este formato:\nES_COMPROBANTE: SI\nMONTO: [número sin separadores de miles, solo dígitos]\nDESTINO: [número de teléfono o cuenta destino completo]\nBANCO_ORIGEN: [banco o app de origen]\nFECHA: [fecha de la transacción]\n\nSi NO es un comprobante:\nES_COMPROBANTE: NO\nDESCRIPCION: [qué es la imagen en una línea]\n\nResponde SOLO con el formato indicado, sin texto adicional ni explicaciones.",
           "inputType": "binary",
